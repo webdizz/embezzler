@@ -41,6 +41,7 @@ String URL = options.s
 String[] COMPONENT_ROOTS = options.c.split(',')
 int number = options.n ? Integer.valueOf(options.n) : 5
 boolean dryRun = !options.d || options.d == 'true'
+String DEFAULT_USER = "admin"
 
 SonarClient sonarClient = SonarClient.builder().url(URL).login(options.u).password(options.p).build()
 Sonar sonar = Sonar.create URL
@@ -79,8 +80,13 @@ issueList.each { issue ->
     User user = userMap[assignee]
     if(!user){
         // strange code, but user in SCM and in Sonar are different
-        String searchTxt = assignee.split('_')[0].substring(1)
+        def matcher = assignee =~ /^(\w+\_)?(\w+)@.*$/
+        String searchTxt = matcher[0][2]
+        searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt
         List users = userClient.find UserQuery.create().searchText(searchTxt)
+        if(!users){
+            users = userClient.find UserQuery.create().searchText(DEFAULT_USER)
+        }
         userMap[assignee] = user = users[0]
     }
 
