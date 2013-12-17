@@ -23,7 +23,8 @@ cli.with {
     p longOpt: 'password', 'specify user password', type: String, args: 1, required: false
     c longOpt: 'components', 'specify list of components (separated by comma)', type: String, args: 1, required: true
     d longOpt: 'dry-run', 'specify to not to perform any action, by default is dry-run', args: 1, type: String, required: false
-    n longOpt: 'number', 'specify number of issues to retreive, default is 5', type: int, args: 1, required: false
+    n longOpt: 'number', 'specify number of issues to retreive', type: int, args: 1, required: false
+    db longOpt: 'days-before', 'specify day for which will be queried issues', type: int, args: 1, required: false
 }
 
 
@@ -50,7 +51,8 @@ if (!envPassword && !options.p){
 
 String URL = options.s
 String[] COMPONENT_ROOTS = options.c.split(',')
-int number = options.n ? Integer.valueOf(options.n) : 5
+int number = options.n ? Integer.valueOf(options.n) : -1
+int daysBefore = options.db ? Integer.valueOf(options.db) : -1
 boolean dryRun = !options.d || options.d == 'true'
 String DEFAULT_USER = "admin"
 
@@ -60,13 +62,27 @@ Sonar sonar = Sonar.create URL
 IssueClient issueClient = sonarClient.issueClient()
 UserClient userClient = sonarClient.userClient()
 
-Issues issues = issueClient.find IssueQuery.create()
+IssueQuery query = IssueQuery.create()
   .componentRoots(COMPONENT_ROOTS)
   .resolved(false)
   .severities('BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR')
   .assigned(false)
-  .statuses('OPEN')
-  .pageSize(number)
+  .statuses('OPEN', 'REOPENED')
+//set default value if 'number' and 'dayBefore' were not specified 
+if(number < 0 && daysBefore < 0){
+   number = 5 
+}
+if(number > 0) {
+  query
+  .pageSize(number)  
+}
+if(daysBefore > 0) {
+   query
+   .createdAfter(new Date() - daysBefore)
+   .createdBefore(new Date() - (daysBefore - 1)) 
+}
+
+Issues issues = issueClient.find query
 
 List issueList = issues.list()
 
@@ -74,7 +90,7 @@ Map sourceMap = [:]
 Map userMap = [:]
 
 issueList.each { issue ->
-    String issueDesc = "Issue key: ${issue.key()}, issue type: ${issue.ruleKey()}, line: ${issue.line()}, in file '${issue.componentKey().split(':')[2]}' "
+    String issueDesc = "Issue key: ${issue.key()}, issue type: ${issue.ruleKey()}, line: ${issue.line()}, \n date: ${issue.creationDate()}, in file '${issue.componentKey().split(':')[2]}' "
     String key = issue.componentKey()
     
     Measure measure = sourceMap.get key
@@ -93,7 +109,7 @@ issueList.each { issue ->
         // strange code, but user in SCM and in Sonar are different
         def matcher = assignee =~ /^(\w+\_)?(\w+)@.*$/
         String searchTxt = matcher[0][2]
-        searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt
+        searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt.substring(1)
         List users = userClient.find UserQuery.create().searchText(searchTxt)
         if(!users){
             users = userClient.find UserQuery.create().searchText(DEFAULT_USER)
