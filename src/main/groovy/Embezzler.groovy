@@ -56,7 +56,7 @@ IssueQuery query = IssueQuery.create()
   .resolved(false)
   .severities('BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR')
   .assigned(false)
-  .statuses('OPEN')
+  .statuses('OPEN', 'REOPENED')
 //set default value if 'number' and 'dayBefore' were not specified 
 if(number < 0 && daysBefore < 0){
    number = 5 
@@ -98,7 +98,7 @@ issueList.each { issue ->
         // strange code, but user in SCM and in Sonar are different
         def matcher = assignee =~ /^(\w+\_)?(\w+)@.*$/
         String searchTxt = matcher[0][2]
-        searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt
+        searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt.substring(1)
         List users = userClient.find UserQuery.create().searchText(searchTxt)
         if(!users){
             users = userClient.find UserQuery.create().searchText(DEFAULT_USER)
