@@ -9,9 +9,12 @@ Run
 --------
 
 ```bash
-
+# get last unassigned issue and assign it to appropriate user
 groovy Embezzler.groovy -s http://localhost:9000 -u login -p password -c 'project1,project2' -n 1 --dry-run false
-
+# get last 5 unassigned issues started from yesterday and assign it to appropriate users
+groovy Embezzler.groovy -s http://localhost:9000 -u login -p password -c 'project1,project2' -n 5 -db 1 --dry-run false
+# get all unassigned issues started from yesterday and assign it to appropriate users
+groovy Embezzler.groovy -s http://localhost:9000 -u login -p password -c 'project1,project2' -db 1 --dry-run false
 ```
 
 Usage
@@ -27,8 +30,12 @@ usage: groovy Embezzler.groovy -s http://localhost:9000 -u user -p
  -d,--dry-run <arg>      specify to not to perform any action, by default
                          is dry-run
  -h,--help               print this message
- -n,--number <arg>       specify number of issues to retreive, default is
-                         5
+ -n,--number <arg>       specify number of issues to retreive, if not 
+                         specified will be queried all issues for whole day
+ -db,--days-before <arg>  specify day for which will be queried issues
+                          (1 - yesterday, 2 - two days ago and so on), if not 
+                          specified issues will be queried without date 
+                          relation
  -p,--password <arg>     specify user password
  -s,--host <arg>         specify SonarQube URL
  -u,--user <arg>         specify user login
