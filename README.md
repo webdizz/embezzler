@@ -19,7 +19,7 @@ Usage
 
 ```bash
 
-groovy main/groovy/Embezzler.groovy --help                           ◼
+groovy main/groovy/Embezzler.groovy --help
 
 usage: groovy Embezzler.groovy -s http://localhost:9000 -u user -p
               password
@@ -32,5 +32,16 @@ usage: groovy Embezzler.groovy -s http://localhost:9000 -u user -p
  -p,--password <arg>     specify user password
  -s,--host <arg>         specify SonarQube URL
  -u,--user <arg>         specify user login
+
+```
+
+Configuration
+----------
+
+In order to hide password from console history or script is used with CI server, for example Jenkins, you can specify environment variable **SNR_PASSWORD** instead of passing password with **-p**.
+
+```bash
+
+export SNR_PASSWORD=mypassword
 
 ```

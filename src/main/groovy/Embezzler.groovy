@@ -20,11 +20,12 @@ cli.with {
     h longOpt: 'help', 'print this message', required: false
     s longOpt: 'host', 'specify SonarQube URL', type: String, args: 1, required: true
     u longOpt: 'user', 'specify user login', type: String, args: 1, required: true
-    p longOpt: 'password', 'specify user password', type: String, args: 1, required: true
+    p longOpt: 'password', 'specify user password', type: String, args: 1, required: false
     c longOpt: 'components', 'specify list of components (separated by comma)', type: String, args: 1, required: true
     d longOpt: 'dry-run', 'specify to not to perform any action, by default is dry-run', args: 1, type: String, required: false
     n longOpt: 'number', 'specify number of issues to retreive, default is 5', type: int, args: 1, required: false
 }
+
 
 def options = cli.parse args
 
@@ -37,13 +38,23 @@ if (options.h) {
     return
 }
 
+def env = System.getenv()
+String envPassword = env['SNR_PASSWORD']
+String password = ''
+if (!envPassword && !options.p){
+    println '\nPlease specify ENV variable for password \'SNR_PASSWORD\' or pass it with \'-p\'!\n'
+    return
+}else{
+    password = options.p ?: envPassword
+}
+
 String URL = options.s
 String[] COMPONENT_ROOTS = options.c.split(',')
 int number = options.n ? Integer.valueOf(options.n) : 5
 boolean dryRun = !options.d || options.d == 'true'
 String DEFAULT_USER = "admin"
 
-SonarClient sonarClient = SonarClient.builder().url(URL).login(options.u).password(options.p).build()
+SonarClient sonarClient = SonarClient.builder().url(URL).login(options.u).password(password).build()
 Sonar sonar = Sonar.create URL
 
 IssueClient issueClient = sonarClient.issueClient()
