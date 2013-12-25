@@ -73,13 +73,13 @@ if(number < 0 && daysBefore < 0){
    number = 5 
 }
 if(number > 0) {
-  query
-  .pageSize(number)  
+    query.pageSize(number)  
 }
 if(daysBefore > 0) {
-   query
-   .createdAfter(new Date() - daysBefore)
-   .createdBefore(new Date() - (daysBefore - 1)) 
+    Date fromDate = new Date() - daysBefore
+    Date toDate = new Date() - (daysBefore - 1)
+    println "Looking for issues started from " + fromDate + " and to " + toDate
+    query.createdAfter(fromDate).createdBefore(toDate) 
 }
 
 Issues issues = issueClient.find query
@@ -107,8 +107,8 @@ issueList.each { issue ->
     User user = userMap[assignee]
     if(!user){
         // strange code, but user in SCM and in Sonar are different
-        def matcher = assignee =~ /^(\w+\_)?(\w+)@.*$/
-        String searchTxt = matcher[0][2]
+        def matcher = assignee =~ /^(\w+[_|.])?(\w+)@.*$/
+        String searchTxt = matcher.getCount() != 0 ? matcher[0][2] : null
         searchTxt = searchTxt == null ? DEFAULT_USER : searchTxt.substring(1)
         List users = userClient.find UserQuery.create().searchText(searchTxt)
         if(!users){
