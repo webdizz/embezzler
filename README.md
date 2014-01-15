@@ -52,3 +52,7 @@ In order to hide password from console history or script is used with CI server,
 export SNR_PASSWORD=mypassword
 
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/webdizz/embezzler/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
