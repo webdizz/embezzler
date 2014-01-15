@@ -1,5 +1,9 @@
-Embezzler
-==============
+
+Status
+------
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/webdizz/embezzler/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 
 **Embezzler** is a simple script to automatically assign [SonarQube](http://www.sonarqube.org/) issues to authors according to [SCM](http://en.wikipedia.org/wiki/Software_configuration_management).
 
@@ -54,5 +58,4 @@ export SNR_PASSWORD=mypassword
 ```
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/webdizz/embezzler/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
