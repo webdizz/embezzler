@@ -31,19 +31,20 @@ groovy main/groovy/Embezzler.groovy --help
 
 usage: groovy Embezzler.groovy -s http://localhost:9000 -u user -p
               password
- -c,--components <arg>   specify list of components (separated by comma)
- -d,--dry-run <arg>      specify to not to perform any action, by default
-                         is dry-run
- -h,--help               print this message
- -n,--number <arg>       specify number of issues to retreive, if not 
-                         specified will be queried all issues for whole day
- -db,--days-before <arg>  specify day for which will be queried issues
-                          (1 - yesterday, 2 - two days ago and so on), if not 
-                          specified issues will be queried without date 
-                          relation
- -p,--password <arg>     specify user password
- -s,--host <arg>         specify SonarQube URL
- -u,--user <arg>         specify user login
+ -c,--components <arg>          specify list of components (separated by comma)
+ -d,--dry-run <arg>             specify to not to perform any action, by default
+                                is dry-run
+ -h,--help                      print this message
+ -n,--number <arg>              specify number of issues to retreive, if not 
+                                specified will be queried all issues for whole day
+ -db,--days-before <arg>        specify day for which will be queried issues
+                                (1 - yesterday, 2 - two days ago and so on), if not 
+                                specified issues will be queried without date 
+                                relation
+ -da,--default-assignee <arg>   specify default user to assign issues on                          
+ -p,--password <arg>            specify user password
+ -s,--host <arg>                specify SonarQube URL
+ -u,--user <arg>                specify user login
 
 ```
 
