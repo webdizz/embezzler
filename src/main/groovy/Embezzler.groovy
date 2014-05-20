@@ -25,6 +25,7 @@ cli.with {
     d longOpt: 'dry-run', 'specify to not to perform any action, by default is dry-run', args: 1, type: String, required: false
     n longOpt: 'number', 'specify number of issues to retreive', type: int, args: 1, required: false
     db longOpt: 'days-before', 'specify day for which will be queried issues', type: int, args: 1, required: false
+    da longOpt: 'default-assignee', 'specify default user to assign issues on', type: String, args: 1, required: false
 }
 
 
@@ -54,7 +55,8 @@ String[] COMPONENT_ROOTS = options.c.split(',')
 int number = options.n ? Integer.valueOf(options.n) : -1
 int daysBefore = options.db ? Integer.valueOf(options.db) : -1
 boolean dryRun = !options.d || options.d == 'true'
-String DEFAULT_USER = "admin"
+String defaultAssignee = options.da ? options.da : "admin"
+String DEFAULT_USER = defaultAssignee"
 
 SonarClient sonarClient = SonarClient.builder().url(URL).login(options.u).password(password).build()
 Sonar sonar = Sonar.create URL
