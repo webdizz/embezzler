@@ -1,4 +1,4 @@
-@Grab(group='org.codehaus.sonar', module='sonar-ws-client', version='4.0')
+@Grab(group='org.codehaus.sonar', module='sonar-ws-client', version='4.1.2')
 @Grab(group='commons-httpclient', module='commons-httpclient', version='3.1')
 
 import org.sonar.wsclient.Sonar
